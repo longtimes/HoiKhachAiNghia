@@ -2,57 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dữ liệu mực nước trạm 553100</title>
+  <title>Dữ liệu trạm 553100</title>
   <style>
-    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-    th { background-color: #f2f2f2; }
+    table { border-collapse: collapse; width: 80%; margin: 20px auto; }
+    th, td { border: 1px solid #333; padding: 8px; text-align: center; }
+    th { background-color: #eee; }
   </style>
 </head>
 <body>
-  <h1>Dữ liệu mực nước trạm 553100</h1>
-  <div id="data">Đang tải dữ liệu...</div>
+  <h2 style="text-align:center;">Dữ liệu trạm 553100</h2>
+  <table id="dataTable">
+    <thead>
+      <tr>
+        <th>Ma tram</th>
+        <th>Thoi gian</th>
+        <th>So lieu</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="3">Đang tải dữ liệu...</td></tr>
+    </tbody>
+  </table>
 
   <script>
-    async function fetchData() {
+    async function loadData() {
       try {
-        const response = await fetch('/.netlify/functions/proxy');
-        const result = await response.json();
+        const res = await fetch('/.netlify/functions/proxy');
+        const json = await res.json();
+        const tbody = document.querySelector('#dataTable tbody');
+        tbody.innerHTML = '';
 
-        // Kiểm tra dữ liệu
-        const matram = result.matram ?? 'Không xác định';
-        let data = result.data ?? [];
-
-        const container = document.getElementById('data');
-        container.innerHTML = `<h2>Trạm: ${matram}</h2>`;
-
-        if (!data || data.length === 0) {
-          container.innerHTML += '<p>Không có dữ liệu</p>';
+        if (json.data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="3">Không có dữ liệu</td></tr>';
           return;
         }
 
-        // Hiển thị bảng
-        const keys = Object.keys(data[0]);
-        let html = '<table><thead><tr>';
-        keys.forEach(k => html += `<th>${k}</th>`);
-        html += '</tr></thead><tbody>';
-
-        data.forEach(row => {
-          html += '<tr>';
-          keys.forEach(k => html += `<td>${row[k]}</td>`);
-          html += '</tr>';
+        json.data.forEach(item => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${item.matram}</td>
+            <td>${item.thoigian || item.time || ''}</td>
+            <td>${item.so_lieu || item.soluong || ''}</td>
+          `;
+          tbody.appendChild(tr);
         });
-
-        html += '</tbody></table>';
-        container.innerHTML += html;
-
       } catch (err) {
-        document.getElementById('data').innerText = 'Lỗi khi tải dữ liệu';
         console.error(err);
+        const tbody = document.querySelector('#dataTable tbody');
+        tbody.innerHTML = '<tr><td colspan="3">Lỗi tải dữ liệu</td></tr>';
       }
     }
 
-    fetchData();
+    loadData();
   </script>
 </body>
 </html>

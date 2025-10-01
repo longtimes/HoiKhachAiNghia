@@ -1,6 +1,6 @@
 export async function handler(event, context) {
   try {
-    const matram = 553100;
+    const matram = 553100; // Hoặc đổi thành 553300 cho trạm khác
     const now = new Date();
     const pad = (n) => n.toString().padStart(2, '0');
     const today = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
@@ -26,7 +26,6 @@ export async function handler(event, context) {
       statusCode: 200,
       body: JSON.stringify({ matram, data })
     };
-
   } catch (error) {
     console.error('Error in proxy function:', error);
     return {

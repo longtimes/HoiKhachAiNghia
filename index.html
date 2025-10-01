@@ -18,7 +18,10 @@
       try {
         const response = await fetch('/.netlify/functions/proxy');
         const result = await response.json();
-        const { matram, data } = result;
+
+        // Kiểm tra dữ liệu
+        const matram = result.matram ?? 'Không xác định';
+        let data = result.data ?? [];
 
         const container = document.getElementById('data');
         container.innerHTML = `<h2>Trạm: ${matram}</h2>`;
@@ -28,16 +31,18 @@
           return;
         }
 
-        // Hiển thị dữ liệu dạng bảng
+        // Hiển thị bảng
         const keys = Object.keys(data[0]);
         let html = '<table><thead><tr>';
         keys.forEach(k => html += `<th>${k}</th>`);
         html += '</tr></thead><tbody>';
+
         data.forEach(row => {
           html += '<tr>';
           keys.forEach(k => html += `<td>${row[k]}</td>`);
           html += '</tr>';
         });
+
         html += '</tbody></table>';
         container.innerHTML += html;
 

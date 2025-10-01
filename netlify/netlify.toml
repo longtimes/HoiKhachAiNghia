@@ -1,3 +1,13 @@
 [build]
+  # Thư mục để Netlify xuất bản site
   publish = "."
+  
+  # Thư mục chứa Netlify Functions
   functions = "netlify/functions"
+
+# Optional: nếu bạn muốn truy cập API thông qua /api/proxy
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/proxy"
+  status = 200
+

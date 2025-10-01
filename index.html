@@ -2,48 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dữ liệu mực nước hai trạm</title>
+  <title>Dữ liệu mực nước trạm 553100</title>
   <style>
-    table { border-collapse: collapse; width: 100%; margin-bottom: 30px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
     th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
     th { background-color: #f2f2f2; }
-    h2 { margin-top: 40px; }
   </style>
 </head>
 <body>
-  <h1>Dữ liệu mực nước</h1>
+  <h1>Dữ liệu mực nước trạm 553100</h1>
   <div id="data">Đang tải dữ liệu...</div>
 
   <script>
     async function fetchData() {
       try {
         const response = await fetch('/.netlify/functions/proxy');
-        const results = await response.json();
+        const result = await response.json();
+        const { matram, data } = result;
 
         const container = document.getElementById('data');
-        container.innerHTML = '';
+        container.innerHTML = `<h2>Trạm: ${matram}</h2>`;
 
-        results.forEach(result => {
-          const { matram, data } = result;
-          container.innerHTML += `<h2>Trạm: ${matram}</h2>`;
+        if (!data || data.length === 0) {
+          container.innerHTML += '<p>Không có dữ liệu</p>';
+          return;
+        }
 
-          if (!data || data.length === 0) {
-            container.innerHTML += '<p>Không có dữ liệu</p>';
-            return;
-          }
-
-          const keys = Object.keys(data[0]);
-          let html = '<table><thead><tr>';
-          keys.forEach(k => html += `<th>${k}</th>`);
-          html += '</tr></thead><tbody>';
-          data.forEach(row => {
-            html += '<tr>';
-            keys.forEach(k => html += `<td>${row[k]}</td>`);
-            html += '</tr>';
-          });
-          html += '</tbody></table>';
-          container.innerHTML += html;
+        // Hiển thị dữ liệu dạng bảng
+        const keys = Object.keys(data[0]);
+        let html = '<table><thead><tr>';
+        keys.forEach(k => html += `<th>${k}</th>`);
+        html += '</tr></thead><tbody>';
+        data.forEach(row => {
+          html += '<tr>';
+          keys.forEach(k => html += `<td>${row[k]}</td>`);
+          html += '</tr>';
         });
+        html += '</tbody></table>';
+        container.innerHTML += html;
+
       } catch (err) {
         document.getElementById('data').innerText = 'Lỗi khi tải dữ liệu';
         console.error(err);

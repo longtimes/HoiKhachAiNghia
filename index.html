@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Dữ liệu mực nước</title>
+</head>
+<body>
+  <h2>Kết quả API qua Proxy</h2>
+  <button onclick="loadData()">Xem dữ liệu trạm 553100</button>
+  <pre id="output"></pre>
+
+  <script>
+    function loadData() {
+      fetch("/.netlify/functions/proxy?matram=553100&ten_table=mucnuoc_oday&sophut=60&tinhtong=0")
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("output").innerText = JSON.stringify(data, null, 2);
+        })
+        .catch(err => {
+          document.getElementById("output").innerText = "Lỗi: " + err;
+        });
+    }
+  </script>
+</body>
+</html>

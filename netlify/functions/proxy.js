@@ -10,13 +10,14 @@ export async function handler(event, context) {
     const pad = (n) => n.toString().padStart(2, '0');
 
     const today = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
-    const thoigianbd = `'${today} 00:00:00'`;
-    const thoigiankt = `'${today} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}'`;
+    const thoigianbd = `${today} 00:00:00`;
+    const thoigiankt = `${today} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+
 
     const results = [];
 
     for (const matram of tramList) {
-      const apiUrl = `http://203.209.181.170:2018/API_TTB/XEM/solieu.php?matram=${matram}&ten_table=mucnuoc_oday&sophut=60&tinhtong=0&thoigianbd=${thoigianbd}&thoigiankt=${thoigiankt}`;
+      const apiUrl = `http://203.209.181.170:2018/API_TTB/XEM/solieu.php?matram=${matram}&ten_table=mucnuoc_oday&sophut=60&tinhtong=0&thoigianbd=${encodeURIComponent(thoigianbd)}&thoigiankt=${encodeURIComponent(thoigiankt)}`;
       
       const response = await fetch(apiUrl);
       const data = await response.json();
@@ -37,3 +38,4 @@ export async function handler(event, context) {
     };
   }
 }
+
